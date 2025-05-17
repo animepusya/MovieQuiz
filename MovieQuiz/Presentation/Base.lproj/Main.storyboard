@@ -112,12 +112,12 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="didTapNoButton" destination="F0D-1f-cCw" id="5en-Bq-J5m"/>
+                        <outlet property="didTapYesButton" destination="q5E-pJ-fAd" id="bdv-5S-IB8"/>
                         <outlet property="image" destination="DHF-vv-w6e" id="KPD-sD-D0D"/>
-                        <outlet property="noButton" destination="F0D-1f-cCw" id="5en-Bq-J5m"/>
                         <outlet property="question" destination="JO4-qW-WI4" id="3tK-W2-3On"/>
                         <outlet property="questionIndex" destination="Qoj-VO-nvi" id="xzq-ch-nV8"/>
                         <outlet property="questionLabel" destination="tEH-q6-INV" id="rYm-NZ-gUt"/>
-                        <outlet property="yesButton" destination="q5E-pJ-fAd" id="bdv-5S-IB8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

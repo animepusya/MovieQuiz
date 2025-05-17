@@ -1,7 +1,6 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController {
-    // MARK: - Lifecycle
     
     struct QuizQuestion {
       // строка с названием фильма,
@@ -31,7 +30,7 @@ final class MovieQuizViewController: UIViewController {
       let buttonText: String
     }
     
-    
+    // MARK: Mock data
     
     // массив вопросов
     private let questions: [QuizQuestion] = [
@@ -77,40 +76,47 @@ final class MovieQuizViewController: UIViewController {
                 correctAnswer: false)
         ]
     
+    // MARK: - Properties
+    
     // переменная с индексом текущего вопроса, начальное значение 0
     // (по этому индексу будем искать вопрос в массиве, где индекс первого элемента 0, а не 1)
     private var currentQuestionIndex = 0
     // переменная со счётчиком правильных ответов, начальное значение закономерно 0
     private var correctAnswers = 0
     
+    // MARK: - Outlets
+    
     @IBOutlet weak private var question: UILabel!
-    
-    @IBOutlet weak private var noButton: UIButton!
-    
-    @IBOutlet weak private var yesButton: UIButton!
-    
+    @IBOutlet weak private var didTapNoButton: UIButton!
+    @IBOutlet weak private var didTapYesButton: UIButton!
     @IBOutlet weak private var questionIndex: UILabel!
-    
     @IBOutlet weak private var questionLabel: UILabel!
-    
     @IBOutlet weak private var image: UIImageView!
     
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        noButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        
-        yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        
+        setupFonts()
+        showFirstQuestion()
+    }
+    
+    // MARK: - Private Methods
+    
+    // метод для настройки шрифтов
+    private func setupFonts() {
+        didTapNoButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        didTapYesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         question.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        
         questionLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
-        
         questionIndex.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        
-        show(quiz: convert(model: questions[currentQuestionIndex]))
-
-        
+    }
+    
+    // метод для загрузки первого вопроса при запуске приложения
+    private func showFirstQuestion() {
+        let firstQuestion = questions[currentQuestionIndex]
+        let viewModel = convert(model: firstQuestion)
+        show(quiz: viewModel)
     }
     
     // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
@@ -199,6 +205,7 @@ final class MovieQuizViewController: UIViewController {
         }
     }
     
+    // MARK: - Actions
     
     @IBAction private func yesButton(_ sender: Any) {
         
@@ -216,69 +223,4 @@ final class MovieQuizViewController: UIViewController {
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer) // 3
         
     }
-    
 }
-
-/*
- Mock-данные
- 
- 
- Картинка: The Godfather
- Настоящий рейтинг: 9,2
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: The Dark Knight
- Настоящий рейтинг: 9
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: Kill Bill
- Настоящий рейтинг: 8,1
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: The Avengers
- Настоящий рейтинг: 8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: Deadpool
- Настоящий рейтинг: 8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: The Green Knight
- Настоящий рейтинг: 6,6
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: Old
- Настоящий рейтинг: 5,8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
- 
- 
- Картинка: The Ice Age Adventures of Buck Wild
- Настоящий рейтинг: 4,3
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
- 
- 
- Картинка: Tesla
- Настоящий рейтинг: 5,1
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
- 
- 
- Картинка: Vivarium
- Настоящий рейтинг: 5,8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
-*/
