@@ -7,6 +7,7 @@ extension Date {
 private extension DateFormatter {
     static let defaultDateTime: DateFormatter = {
         let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone.current
         dateFormatter.dateFormat = "dd.MM.YY hh:mm"
         return dateFormatter
     }()
