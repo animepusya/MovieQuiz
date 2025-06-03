@@ -134,13 +134,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // приватный метод, который содержит логику перехода в один из сценариев
     // метод ничего не принимает и ничего не возвращает
     private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questionsAmount - 1 {
-            let text = correctAnswers == questionsAmount ?
-                    "Поздравляем, вы ответили на 10 из 10!" :
-                    "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
+        let isLastQuestion = currentQuestionIndex == questionsAmount - 1
+        
+        if isLastQuestion {
+            let message: String
+            if correctAnswers == questionsAmount {
+                message = "Поздравляем, вы ответили на 10 из 10!"
+            } else {
+                message = "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
+            }
+            
             let viewModel = QuizResultsViewModel(
                 title: "Этот раунд окончен!",
-                text: text,
+                text: message,
                 buttonText: "Сыграть ещё раз")
             statisticService.store(correct: correctAnswers, total: questionsAmount)
             show(quiz: viewModel)
@@ -155,7 +161,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // метод для загрузки первого вопроса при запуске приложения
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else {
+        guard let question else {
             return
         }
 
