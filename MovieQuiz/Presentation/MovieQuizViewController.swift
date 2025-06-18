@@ -28,6 +28,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet weak private var questionIndex: UILabel!
     @IBOutlet weak private var questionLabel: UILabel!
     @IBOutlet weak private var image: UIImageView!
+    @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Lifecycle
 
@@ -35,14 +36,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         super.viewDidLoad()
         setupFonts()
         statisticService = StatisticService()
-        
+        showLoadingIndicator()
         alertPresenter = AlertPresenter(movieQuizViewController: self)
         
-        let questionFactory = QuestionFactory() 
+        let questionFactory = QuestionFactory(moviesLoader: MoviesLoader())
         questionFactory.delegate = self
         self.questionFactory = questionFactory
-        
-        self.questionFactory?.requestNextQuestion()
+        self.questionFactory?.loadData()
+        // self.questionFactory?.requestNextQuestion()
     }
     
     // MARK: - Private Methods
@@ -59,7 +60,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionModel = QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
@@ -75,13 +76,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         // очистка картинки от рамки
         image.layer.borderWidth = 0
         image.layer.borderColor = UIColor.clear.cgColor
-        
-        
     }
     
     // приватный метод, который меняет цвет рамки
     // принимает на вход булевое значение и ничего не возвращает
     private func showAnswerResult(isCorrect: Bool) {
+        setButtonsEnabled(false)
+        showLoadingState()
        // метод красит рамку
         image.layer.masksToBounds = true // даём разрешение на рисование рамки
         image.layer.borderWidth = 8 // толщина рамки
@@ -97,7 +98,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         // запускаем задачу через 1 секунду c помощью диспетчера задач
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             // код, который мы хотим вызвать через 1 секунду
-            guard let self = self else { return }
+            guard let self else { return }
                 self.showNextQuestionOrResults()
         }
     }
@@ -152,10 +153,35 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             show(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
+            showLoadingState()
             questionFactory?.requestNextQuestion()
         }
     }
     
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.isHidden = true
+       // activityIndicator.startAnimating()
+    }
+    
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        let alert = AlertModel(title: "Ошибка",
+                               message: message,
+                               buttonTitle: "Попробовать ещё раз") { [weak self] in
+            guard let self else { return }
+            
+            self.currentQuestionIndex = 0
+            self.correctAnswers = 0
+            
+            self.questionFactory?.loadData()
+        }
+        alertPresenter?.showAlert(model: alert)
+    }
     // MARK: - QuestionFactoryDelegate
     
     // метод для загрузки первого вопроса при запуске приложения
@@ -170,8 +196,35 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
+            self?.hideLoadingState()
         }
     }
+    
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true
+        questionFactory?.requestNextQuestion()
+    }
+
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+    
+    private func setButtonsEnabled(_ isEnabled: Bool) {
+        didTapYesButton.isEnabled = isEnabled
+        didTapNoButton.isEnabled = isEnabled
+    }
+
+    private func showLoadingState() {
+        showLoadingIndicator()
+        setButtonsEnabled(false)
+    }
+
+    private func hideLoadingState() {
+        hideLoadingIndicator()
+        setButtonsEnabled(true)
+    }
+
+
     
     // MARK: - Actions
     
@@ -181,7 +234,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             return
         }
         let givenAnswer = true
-        
+        setButtonsEnabled(false)
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
@@ -191,7 +244,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             return
         }
         let givenAnswer = false
-        
+        setButtonsEnabled(false)
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
         
     }
