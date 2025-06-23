@@ -36,14 +36,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         super.viewDidLoad()
         setupFonts()
         statisticService = StatisticService()
-        showLoadingIndicator()
+        activityIndicator.hidesWhenStopped = true
         alertPresenter = AlertPresenter(movieQuizViewController: self)
         
         let questionFactory = QuestionFactory(moviesLoader: MoviesLoader())
         questionFactory.delegate = self
         self.questionFactory = questionFactory
         self.questionFactory?.loadData()
-        // self.questionFactory?.requestNextQuestion()
     }
     
     // MARK: - Private Methods
@@ -60,7 +59,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionModel = QuizStepViewModel(
-            image: UIImage(data: model.image) ?? UIImage(),
+            image: UIImage(data: model.imageData) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
@@ -159,13 +158,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
         activityIndicator.startAnimating()
     }
     
     private func hideLoadingIndicator() {
-        activityIndicator.isHidden = true
-       // activityIndicator.startAnimating()
+        activityIndicator.stopAnimating()
     }
     
     private func showNetworkError(message: String) {
@@ -201,7 +198,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     func didLoadDataFromServer() {
-        activityIndicator.isHidden = true
+        hideLoadingIndicator()
         questionFactory?.requestNextQuestion()
     }
 

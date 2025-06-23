@@ -26,8 +26,8 @@ struct MoviesLoader: MoviesLoading {
     
     func loadMovies(handler: @escaping (Result<MostPopularMovies, Error>) -> Void) {
         networkClient.fetch(url: mostPopularMoviesUrl) { result in
-                switch result {
-                case .success(let data):
+            switch result {
+            case .success(let data):
                 do {
                     let movies = try JSONDecoder().decode(MostPopularMovies.self, from: data)
                     handler(.success(movies))

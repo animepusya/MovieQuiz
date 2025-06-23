@@ -20,49 +20,49 @@ final class QuestionFactory: QuestionFactoryProtocol {
     private var movies: [MostPopularMovie] = []
     
     // mock data
-/*    private let questions: [QuizQuestion] = [
-            QuizQuestion(
-                image: "The Godfather",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true),
-            QuizQuestion(
-                image: "The Dark Knight",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true),
-            QuizQuestion(
-                image: "Kill Bill",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true),
-            QuizQuestion(
-                image: "The Avengers",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true),
-            QuizQuestion(
-                image: "Deadpool",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true),
-            QuizQuestion(
-                image: "The Green Knight",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true),
-            QuizQuestion(
-                image: "Old",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: false),
-            QuizQuestion(
-                image: "The Ice Age Adventures of Buck Wild",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: false),
-            QuizQuestion(
-                image: "Tesla",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: false),
-            QuizQuestion(
-                image: "Vivarium",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: false)
-        ]
- */
+    /*    private let questions: [QuizQuestion] = [
+     QuizQuestion(
+     image: "The Godfather",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: true),
+     QuizQuestion(
+     image: "The Dark Knight",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: true),
+     QuizQuestion(
+     image: "Kill Bill",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: true),
+     QuizQuestion(
+     image: "The Avengers",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: true),
+     QuizQuestion(
+     image: "Deadpool",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: true),
+     QuizQuestion(
+     image: "The Green Knight",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: true),
+     QuizQuestion(
+     image: "Old",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: false),
+     QuizQuestion(
+     image: "The Ice Age Adventures of Buck Wild",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: false),
+     QuizQuestion(
+     image: "Tesla",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: false),
+     QuizQuestion(
+     image: "Vivarium",
+     text: "Рейтинг этого фильма больше чем 6?",
+     correctAnswer: false)
+     ]
+     */
     
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate? = nil) {
         self.moviesLoader = moviesLoader
@@ -70,8 +70,8 @@ final class QuestionFactory: QuestionFactoryProtocol {
     }
     
     func setup(delegate: QuestionFactoryDelegate) {
-            self.delegate = delegate
-        }
+        self.delegate = delegate
+    }
     
     func requestNextQuestion() {
         DispatchQueue.global().async { [weak self] in
@@ -93,7 +93,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
             let text = "Рейтинг этого фильма больше чем 7?"
             let correctAnswer = rating > 7
             
-            let question = QuizQuestion(image: imageData,
+            let question = QuizQuestion(imageData: imageData,
                                         text: text,
                                         correctAnswer: correctAnswer)
             
@@ -105,19 +105,19 @@ final class QuestionFactory: QuestionFactoryProtocol {
     }
     
     func loadData() {
-            moviesLoader.loadMovies { [weak self] result in
-                DispatchQueue.main.async {
-                    guard let self = self else { return }
-                    switch result {
-                    case .success(let mostPopularMovies):
-                        self.movies = mostPopularMovies.items // сохраняем фильм в нашу новую переменную
-                        self.delegate?.didLoadDataFromServer() // сообщаем, что данные загрузились
-                    case .failure(let error):
-                        self.delegate?.didFailToLoadData(with: error) // сообщаем об ошибке нашему MovieQuizViewController
-                    }
+        moviesLoader.loadMovies { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch result {
+                case .success(let mostPopularMovies):
+                    self.movies = mostPopularMovies.items // сохраняем фильм в нашу новую переменную
+                    self.delegate?.didLoadDataFromServer() // сообщаем, что данные загрузились
+                case .failure(let error):
+                    self.delegate?.didFailToLoadData(with: error) // сообщаем об ошибке нашему MovieQuizViewController
                 }
-                
             }
+            
         }
-
+    }
+    
 }
