@@ -101,17 +101,23 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="WyJ-Sn-yON">
+                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="black"/>
                         <constraints>
+                            <constraint firstItem="WyJ-Sn-yON" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9HR-s1-Vbg"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ko6-yC-MQQ" secondAttribute="trailing" constant="20" id="GmS-I7-crg"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ko6-yC-MQQ" secondAttribute="bottom" id="TCE-Fx-by9"/>
+                            <constraint firstItem="WyJ-Sn-yON" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="adw-FE-wYE"/>
                             <constraint firstItem="ko6-yC-MQQ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="yrB-OH-HyC"/>
                             <constraint firstItem="ko6-yC-MQQ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="zF4-wg-6Hb"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="WyJ-Sn-yON" id="EP6-gQ-Ndc"/>
                         <outlet property="didTapNoButton" destination="F0D-1f-cCw" id="5en-Bq-J5m"/>
                         <outlet property="didTapYesButton" destination="q5E-pJ-fAd" id="bdv-5S-IB8"/>
                         <outlet property="image" destination="DHF-vv-w6e" id="KPD-sD-D0D"/>
